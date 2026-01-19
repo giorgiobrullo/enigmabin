@@ -15,7 +15,13 @@ export async function decrypt(
         
         // Detect if this was encrypted with quantum resistance by checking for quantum-specific fields
         const isQuantumMode = encrypted.ciphertext1 !== undefined && encrypted.nonce1 !== undefined;
-        
+        const isV2 = encrypted.version === '2';
+
+        // Select the appropriate decrypt function based on version
+        const aeadDecrypt = isV2
+            ? sodium.crypto_aead_xchacha20poly1305_ietf_decrypt
+            : sodium.crypto_aead_chacha20poly1305_ietf_decrypt;
+
         if (isQuantumMode) {
             // In quantum mode, the decryption key contains:
             // 1. MLKEM secret key (3168 bytes) - for quantum-resistant layer
@@ -41,28 +47,25 @@ export async function decrypt(
                 sodium.from_base64(encrypted.ciphertext2),
                 publicKey2,
                 secretKey2
-            );
+            ) as Uint8Array;
 
             // Decrypt outer layer using the X25519 shared secret
-            // - Uses ChaCha20-Poly1305 symmetric encryption
-            // - The nonce ensures the same key can be safely used multiple times
-            const decrypted1 = sodium.crypto_aead_chacha20poly1305_decrypt(
+            const decrypted1 = aeadDecrypt(
                 null,
                 sodium.from_base64(encrypted.content),
                 null,
                 sodium.from_base64(encrypted.nonce2),
                 sharedSecret2
-            );
+            ) as Uint8Array;
 
             // Decrypt inner layer using the Kyber shared secret
-            // - Also uses ChaCha20-Poly1305 but with the quantum-derived key
-            const decrypted2 = sodium.crypto_aead_chacha20poly1305_decrypt(
+            const decrypted2 = aeadDecrypt(
                 null,
                 decrypted1,
                 null,
                 sodium.from_base64(encrypted.nonce1!),
                 sharedSecret1
-            );
+            ) as Uint8Array;
 
             return JSON.parse(sodium.to_string(decrypted2));
 
@@ -81,19 +84,16 @@ export async function decrypt(
                 sodium.from_base64(encrypted.ciphertext2),
                 publicKey,
                 secretKey
-            );
+            ) as Uint8Array;
 
             // Decrypt the actual content using the shared secret
-            // - Uses ChaCha20-Poly1305 symmetric encryption
-            // - Much faster than asymmetric encryption for larger amounts of data
-            // - The nonce prevents reuse of the same key+message combination
-            const decrypted = sodium.crypto_aead_chacha20poly1305_decrypt(
+            const decrypted = aeadDecrypt(
                 null,
                 sodium.from_base64(encrypted.content),
                 null,
                 sodium.from_base64(encrypted.nonce2),
                 sharedSecret
-            );
+            ) as Uint8Array;
 
             // Convert the decrypted bytes back into the original JSON object
             return JSON.parse(sodium.to_string(decrypted));

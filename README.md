@@ -1,42 +1,53 @@
-# EnigmaBin
+<p align="center">
+  <img src="static/favicon.svg" alt="EnigmaBin" width="80" height="80">
+</p>
 
-[![SvelteKit](https://img.shields.io/badge/Built_with-SvelteKit-FF3E00?logo=svelte)](https://kit.svelte.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-![Development Status](https://img.shields.io/badge/Status-Development_Preview-yellow)
+<h1 align="center">EnigmaBin</h1>
 
-EnigmaBin is a secure, privacy-focused pastebin service built with flexible end-to-end encryption options. Share code and text securely without compromising on privacy or usability.
+<p align="center">
+  <a href="https://kit.svelte.dev/"><img src="https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white" alt="SvelteKit"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS"></a>
+  <a href="https://www.prisma.io/"><img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma"></a>
+</p>
 
-## Features
+<p align="center">
+  A zero-knowledge pastebin with end-to-end encryption. Classical or quantum-resistant.
+</p>
 
-- **End-to-End Encryption**: All content is encrypted in your browser before being sent to the server
-- **Flexible Security Options**:
-  - Fast classical encryption using X25519
-  - Enhanced quantum-resistant protection using dual-layer ML-KEM + X25519
-- **Zero-Knowledge Architecture**: We never have access to your unencrypted data
-- **Automatic Expiration**: Set custom expiration times for your pastes
-- **Burn on View**: Optional self-destruct feature for one-time viewing
-- **Syntax Highlighting**: Support for multiple programming languages using Monaco Editor
-- **No Account Required**: Just paste and share
+<p align="center">
+  <a href="https://enigmabin.com"><strong>enigmabin.com</strong></a>
+</p>
 
-## Technology Stack
+## About
 
-- 🔧 **Framework**: SvelteKit with TypeScript
-- 🎨 **Styling**: TailwindCSS + shadcn-svelte
-- 🔒 **Encryption**: libsodium-wrappers + ML-KEM
-- 📝 **Editor**: Monaco Editor
-- 🗄️ **Database**: PostgreSQL with Prisma ORM
-- 🚀 **Deployment**: Vercel
+EnigmaBin is a privacy-focused pastebin where all content is encrypted in your browser before reaching the server. The server never sees your plaintext data, only ciphertext it cannot decrypt.
 
+You choose your security level: fast classical encryption using X25519 key exchange, or dual-layer quantum-resistant protection combining ML-KEM-1024 with X25519. Both use XChaCha20-Poly1305 for authenticated symmetric encryption.
 
-## Security Features
+Pastes can auto-expire after a set time or self-destruct after a single view. No account required.
 
-- **X25519**: Default classical encryption
-- **ML-KEM**: Optional quantum-resistant layer
-- **ChaCha20**: Symmetric encryption
-- **Poly1305**: Authentication
+## Security
 
-## Contributing
+| Layer | Algorithm | Purpose |
+|-------|-----------|---------|
+| Key Exchange | X25519 | Classical ECDH |
+| Key Exchange | ML-KEM-1024 | Post-quantum KEM (optional) |
+| Symmetric | XChaCha20-Poly1305 | Authenticated encryption |
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+The encryption key is derived client-side and stored only in the URL fragment, which is never sent to the server. Even with full database access, pastes cannot be decrypted without the URL.
+
+## Quick Start
+
+```bash
+bun install
+bunx prisma generate
+bunx prisma db push
+bun dev
+```
+
+Requires a PostgreSQL database. Set `DATABASE_URL` in your environment.
+
+## License
+
+All rights reserved. © 2026 Giorgio Brullo

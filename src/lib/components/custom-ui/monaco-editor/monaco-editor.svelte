@@ -2,7 +2,7 @@
     import { onMount, onDestroy } from 'svelte';
     import * as monaco from 'monaco-editor';
     import { cn } from "$lib/utils.js";
-    
+
     // We only need the editor worker for basic functionality
     import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 
@@ -10,13 +10,17 @@
         value = $bindable(''),
         language = $bindable('javascript'),
         class: className = '',
-        theme = $bindable<'vs' | 'vs-dark' | 'hc-black'>('vs-dark'),
         readOnly = false,
         automaticLayout = true,
     } = $props();
 
     let editorElement: HTMLElement;
     let editor: monaco.editor.IStandaloneCodeEditor;
+    let observer: MutationObserver;
+
+    function getTheme(): 'vs' | 'vs-dark' {
+        return document.documentElement.classList.contains('dark') ? 'vs-dark' : 'vs';
+    }
 
     onMount(() => {
         // Simple worker setup for basic functionality
@@ -29,7 +33,7 @@
         editor = monaco.editor.create(editorElement, {
             value,
             language,
-            theme,
+            theme: getTheme(),
             automaticLayout,
             readOnly,
             minimap: { enabled: false },
@@ -45,9 +49,19 @@
                 value = newValue;
             }
         });
+
+        // Watch for dark mode changes on <html> element
+        observer = new MutationObserver(() => {
+            monaco.editor.setTheme(getTheme());
+        });
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
     });
 
     onDestroy(() => {
+        observer?.disconnect();
         monaco?.editor.getModels().forEach((model) => model.dispose());
         editor?.dispose();
     });
@@ -69,7 +83,7 @@
 <div
     bind:this={editorElement}
     class={cn(
-        "h-full w-full rounded-md border",
+        "h-full w-full",
         className
     )}
 >

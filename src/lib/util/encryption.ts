@@ -7,7 +7,7 @@ export interface EncryptedData {
     ciphertext2: string;    // Encrypted shared secret
     nonce1?: string;        // Random nonce for quantum layer
     nonce2: string;         // Random nonce for classical layer
-    version: '1';          
+    version: '1' | '2';
 }
 
 export interface PasteContent {
@@ -47,8 +47,8 @@ export async function encrypt(
         // Generate unique nonces (numbers used once) for each encryption layer
         // - Nonces ensure that the same key can be safely used multiple times
         // - Each encryption needs its own unique nonce
-        const nonce1 = sodium.randombytes_buf(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
-        const nonce2 = sodium.randombytes_buf(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
+        const nonce1 = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
+        const nonce2 = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
 
         // Prepare the content for encryption
         const pasteContent: PasteContent = {
@@ -59,35 +59,35 @@ export async function encrypt(
         // First encryption layer using Kyber's shared secret
         // - Uses ChaCha20-Poly1305 symmetric encryption
         // - Encrypts with the quantum-resistant shared secret
-        const encrypted1 = sodium.crypto_aead_chacha20poly1305_encrypt(
-            sodium.from_string(JSON.stringify(pasteContent)), 
-            null, null, nonce1, sharedSecret1
-        );
+        const encrypted1 = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+            sodium.from_string(JSON.stringify(pasteContent)) as Uint8Array,
+            null, null, nonce1 as Uint8Array, sharedSecret1
+        ) as Uint8Array;
 
         // Second encryption layer using X25519's shared secret
         // - Adds classical encryption layer for defense in depth
-        const encrypted2 = sodium.crypto_aead_chacha20poly1305_encrypt(
-            encrypted1, 
-            null, null, nonce2, sharedSecret2
-        );
+        const encrypted2 = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+            encrypted1,
+            null, null, nonce2 as Uint8Array, sharedSecret2 as Uint8Array
+        ) as Uint8Array;
 
         return {
             encrypted: {
                 content: sodium.to_base64(encrypted2),                    // Double-encrypted content
                 ciphertext1: sodium.to_base64(ciphertext1),              // Quantum encapsulated key
                 ciphertext2: sodium.to_base64(sodium.crypto_box_seal(    // Classical encrypted shared secret
-                    sharedSecret2, publicKey2
-                )),
-                nonce1: sodium.to_base64(nonce1),
-                nonce2: sodium.to_base64(nonce2),
-                version: '1',
+                    sharedSecret2 as Uint8Array, publicKey2 as Uint8Array
+                ) as Uint8Array),
+                nonce1: sodium.to_base64(nonce1 as Uint8Array),
+                nonce2: sodium.to_base64(nonce2 as Uint8Array),
+                version: '2',
             },
             // Combine all keys needed for decryption into one string
             decryptionKey: sodium.to_base64(
                 new Uint8Array([
-                    ...Array.from(secretKey1),    // Quantum secret key
-                    ...Array.from(secretKey2),    // Classical secret key
-                    ...Array.from(publicKey2)     // Classical public key (needed for unsealing)
+                    ...(secretKey1 as Uint8Array),    // Quantum secret key
+                    ...(secretKey2 as Uint8Array),    // Classical secret key
+                    ...(publicKey2 as Uint8Array)     // Classical public key (needed for unsealing)
                 ])
             )
         };
@@ -101,7 +101,7 @@ export async function encrypt(
         
         // Generate random shared secret and nonce for symmetric encryption
         const sharedSecret = sodium.randombytes_buf(32);  // 256-bit random key
-        const nonce = sodium.randombytes_buf(sodium.crypto_aead_chacha20poly1305_NPUBBYTES);
+        const nonce = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
 
         // Prepare the content
         const pasteContent: PasteContent = { 
@@ -112,25 +112,25 @@ export async function encrypt(
         // Encrypt the content using ChaCha20-Poly1305 symmetric encryption
         // - Fast and efficient for large amounts of data
         // - Uses the random shared secret as the key
-        const encrypted = sodium.crypto_aead_chacha20poly1305_encrypt(
-            sodium.from_string(JSON.stringify(pasteContent)), 
-            null, null, nonce, sharedSecret
-        );
+        const encrypted = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+            sodium.from_string(JSON.stringify(pasteContent)) as Uint8Array,
+            null, null, nonce as Uint8Array, sharedSecret as Uint8Array
+        ) as Uint8Array;
 
         return {
             encrypted: {
                 content: sodium.to_base64(encrypted),                  // Encrypted content
                 ciphertext2: sodium.to_base64(sodium.crypto_box_seal( // Encrypted shared secret
-                    sharedSecret, publicKey
-                )),
-                nonce2: sodium.to_base64(nonce),
-                version: '1',
+                    sharedSecret as Uint8Array, publicKey as Uint8Array
+                ) as Uint8Array),
+                nonce2: sodium.to_base64(nonce as Uint8Array),
+                version: '2',
             },
             // Combine both keys needed for decryption into one string
             decryptionKey: sodium.to_base64(
                 new Uint8Array([
-                    ...Array.from(secretKey),     // Secret key for unsealing
-                    ...Array.from(publicKey)      // Public key for unsealing
+                    ...(secretKey as Uint8Array),     // Secret key for unsealing
+                    ...(publicKey as Uint8Array)      // Public key for unsealing
                 ])
             )
         };

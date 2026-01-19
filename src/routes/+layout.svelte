@@ -1,95 +1,84 @@
 <script lang="ts">
 	import '../app.css';
-	import { cn } from '$lib/utils';
+	import 'overlayscrollbars/overlayscrollbars.css';
 	import { ModeWatcher } from "mode-watcher";
 	import { toggleMode } from "mode-watcher";
-	import Sun from "lucide-svelte/icons/sun";
-	import Moon from "lucide-svelte/icons/moon";
+	import { Sun, Moon } from '@lucide/svelte';
 	import { Button } from "$lib/components/ui/button/index.js";
-	let { children } = $props();
+	import { OverlayScrollbarsComponent } from "overlayscrollbars-svelte";
 	import { Toaster } from "$lib/components/ui/sonner/index.js";
+	import { MetaTags } from 'svelte-meta-tags';
+
+	let { children } = $props();
+
+	const defaultMeta = {
+		title: 'EnigmaBin',
+		titleTemplate: '%s | EnigmaBin',
+		description: 'Zero-knowledge encrypted pastebin. Your content is encrypted in your browser before it leaves. We can\'t read your pastes.',
+		canonical: 'https://enigmabin.com',
+		openGraph: {
+			type: 'website',
+			url: 'https://enigmabin.com',
+			title: 'EnigmaBin',
+			description: 'Zero-knowledge encrypted pastebin. End-to-end encryption means we can\'t read your pastes.',
+			siteName: 'EnigmaBin',
+			images: [{ url: 'https://enigmabin.com/og/home.png', width: 1200, height: 630, alt: 'EnigmaBin - Zero-knowledge encrypted pastebin' }]
+		},
+		twitter: {
+			cardType: 'summary_large_image' as const,
+			title: 'EnigmaBin',
+			description: 'Zero-knowledge encrypted pastebin. End-to-end encryption means we can\'t read your pastes.',
+			image: 'https://enigmabin.com/og/home.png'
+		}
+	};
 </script>
 
-<div class="relative min-h-screen flex flex-col">
-	<div class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-900 dark:text-yellow-100 py-2 text-center text-sm">
-		🚧 Development Preview: Features and data are not final and may be reset at any time
-	</div>
-	<header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-		<div class="container flex h-14 items-center">
-			<a href="/" class="flex items-center space-x-2">
-				<span class="font-bold text-xl">EnigmaBin</span>
+<MetaTags {...defaultMeta} />
+
+<OverlayScrollbarsComponent
+	element="div"
+	options={{ scrollbars: { autoHide: 'scroll' } }}
+	class="h-screen flex flex-col"
+	defer
+>
+	<header class="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+		<div class="container flex h-14 items-center justify-between">
+			<a href="/" class="font-semibold text-lg tracking-tight">
+				enigmabin
 			</a>
-			<div class="flex flex-1 items-center justify-end space-x-4">
-				<nav class="flex items-center space-x-4">
-					<a 
-						href="/about"
-						class={cn(
-							"text-sm font-medium transition-colors hover:text-primary",
-							"text-muted-foreground"
-						)}
-					>
-						About
-					</a>
-					<a 
-						href="/faq"
-						class={cn(
-							"text-sm font-medium transition-colors hover:text-primary",
-							"text-muted-foreground"
-						)}
-					>
-						FAQ
-					</a>
-					<a 
-						href="/new"
-						class={cn(
-							"text-sm font-medium transition-colors hover:text-primary",
-							"text-muted-foreground"
-						)}
-					>
-						New Paste
-					</a>
-					<Button onclick={toggleMode} variant="outline" size="icon">
-						<Sun
-							class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-						/>
-						<Moon
-							class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-						/>
-						<span class="sr-only">Toggle theme</span>
-					</Button>
-				</nav>
-			</div>
+			<nav class="flex items-center gap-1">
+				<a href="/about" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+					About
+				</a>
+				<a href="/faq" class="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+					FAQ
+				</a>
+				<a href="/new" class="ml-2 px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+					New Paste
+				</a>
+				<Button onclick={toggleMode} variant="ghost" size="icon" class="ml-1 h-8 w-8">
+					<Sun class="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+					<Moon class="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+					<span class="sr-only">Toggle theme</span>
+				</Button>
+			</nav>
 		</div>
 	</header>
-	
+
 	<ModeWatcher />
 	<Toaster />
 
-	<main class="flex-1 container py-6">
+	<main class="flex-1">
 		{@render children()}
 	</main>
 
-	<footer class="border-t py-6 md:py-0">
-		<div class="container flex flex-col items-center justify-between gap-4 md:h-14 md:flex-row">
-			<p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
-				Built with privacy in mind. All pastes are encrypted end-to-end.
-			</p>
-			<div class="flex gap-4 text-center text-sm text-muted-foreground md:text-left">
-				<a 
-					href="mailto:enigmabin@reizouko.eu"
-					class="font-medium underline underline-offset-4"
-				>
-					Contact
-				</a>
-				<a 
-					href="https://github.com/giorgiobrux/enigmabin" 
-					target="_blank"
-					rel="noreferrer"
-					class="font-medium underline underline-offset-4"
-				>
-					GitHub
-				</a>
+	<footer class="border-t py-6 text-sm text-muted-foreground">
+		<div class="container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+			<p>End-to-end encrypted. Zero knowledge.</p>
+			<div class="flex gap-4">
+				<a href="mailto:contact@enigmabin.com" class="hover:text-foreground transition-colors">Contact</a>
+				<a href="https://github.com/giorgiobrullo/enigmabin" target="_blank" rel="noreferrer" class="hover:text-foreground transition-colors">GitHub</a>
 			</div>
 		</div>
 	</footer>
-</div>
+</OverlayScrollbarsComponent>

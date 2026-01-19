@@ -1,0 +1,361 @@
+// Light mode colors (default)
+$light-background: #ffffff;
+$light-background-secondary: #f6f8fa;
+$light-border: #d1d9e0;
+$light-text: #1f2328;
+$light-text-muted: #656d76;
+$light-text-placeholder: #6e7681;
+
+// Dark mode colors
+$dark-background: #0d1117;
+$dark-background-secondary: #161b22;
+$dark-border: #2b3138;
+$dark-text: #e6edf3;
+$dark-text-muted: #8b949e;
+$dark-text-placeholder: #6e7681;
+
+.carta-theme__github {
+	&.carta-editor {
+		display: flex;
+		flex-direction: column;
+
+		// Light mode (default)
+		background-color: $light-background;
+
+		.carta-wrapper {
+			padding: 1rem;
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.carta-input,
+		.carta-renderer {
+			flex: 1;
+			overflow: auto;
+		}
+
+		.carta-font-code {
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+			font-size: 0.875rem;
+			color: $light-text;
+			caret-color: $light-text;
+		}
+
+		textarea {
+			color: $light-text !important;
+			caret-color: $light-text;
+			background: transparent !important;
+
+			&::placeholder {
+				color: $light-text-placeholder !important;
+			}
+		}
+
+		.carta-toolbar {
+			height: 2.5rem;
+			background-color: $light-background-secondary;
+			color: $light-text-muted;
+
+			.carta-icon {
+				width: 2rem;
+				height: 2rem;
+				color: $light-text-muted;
+				background: transparent;
+				border: none;
+				cursor: pointer;
+
+				&:hover {
+					color: $light-text;
+					background-color: $light-border;
+				}
+			}
+		}
+
+		.carta-toolbar-right,
+		.carta-filler {
+			border-bottom: 1px solid $light-border;
+		}
+
+		.carta-toolbar-left {
+			& > * {
+				padding-left: 1rem;
+				padding-right: 1rem;
+				font-size: 0.95rem;
+			}
+
+			button {
+				height: 100%;
+				color: $light-text-muted;
+				background: transparent;
+				border: none;
+				cursor: pointer;
+
+				&:hover {
+					color: $light-text;
+				}
+			}
+
+			.carta-active {
+				background-color: $light-background;
+				color: $light-text;
+
+				border-right: 1px solid $light-border;
+				border-bottom: 1px solid $light-background;
+
+				&:not(:first-child) {
+					border-left: 1px solid $light-border;
+				}
+			}
+		}
+
+		.carta-toolbar-right {
+			padding-right: 12px;
+		}
+
+		.carta-icons-menu {
+			padding: 8px;
+			border: 1px solid $light-border;
+			border-radius: 6px;
+			min-width: 180px;
+			background: $light-background;
+
+			.carta-icon-full {
+				padding-left: 6px;
+				padding-right: 6px;
+
+				margin-top: 2px;
+				&:first-child {
+					margin-top: 0;
+				}
+
+				&:hover {
+					color: $light-text;
+					background-color: $light-background-secondary;
+				}
+
+				span {
+					margin-left: 6px;
+					color: $light-text;
+					font-size: 0.85rem;
+				}
+			}
+		}
+
+		.carta-renderer {
+			color: $light-text;
+		}
+	}
+
+	// Plugin emoji
+	&.carta-emoji {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+
+		width: 19rem;
+		max-height: 14rem;
+		overflow-x: auto;
+		overflow-y: auto;
+		border-radius: 4px;
+		font-family: inherit;
+		background-color: $light-background;
+		word-break: break-word;
+		scroll-padding: 6px;
+	}
+
+	&.carta-emoji button {
+		background: $light-background-secondary;
+		cursor: pointer;
+		display: inline-block;
+		border-radius: 4px;
+		border: 0;
+		padding: 0;
+		margin: 0.175rem;
+		min-width: 2rem;
+		height: 2rem;
+		font-size: 1.2rem;
+		line-height: 100%;
+		text-align: center;
+		white-space: nowrap;
+	}
+
+	&.carta-emoji button:hover,
+	&.carta-emoji button.carta-active {
+		background: $light-border;
+	}
+
+	// Plugin slash
+	&.carta-slash {
+		width: 18rem;
+		max-height: 14rem;
+		overflow-y: scroll;
+		border-radius: 4px;
+		font-family: inherit;
+		background-color: $light-background;
+		padding: 6px;
+		scroll-padding: 6px;
+	}
+
+	&.carta-slash span {
+		width: fit-content;
+	}
+
+	&.carta-slash button {
+		background: none;
+		width: 100%;
+		padding: 10px;
+		border: 0;
+		border-radius: 4px;
+	}
+
+	&.carta-slash .carta-slash-group {
+		padding: 0 4px 0 4px;
+		margin-bottom: 4px;
+		font-size: 0.8rem;
+	}
+
+	&.carta-slash button.carta-active,
+	&.carta-slash button:hover {
+		background: $light-background-secondary;
+		cursor: pointer;
+	}
+
+	&.carta-slash .carta-snippet-title {
+		font-size: 0.85rem;
+		font-weight: 600;
+	}
+
+	&.carta-slash .carta-snippet-description {
+		font-size: 0.8rem;
+		text-overflow: ellipsis;
+	}
+}
+
+// Dark mode overrides
+html.dark .carta-theme__github {
+	&.carta-editor {
+		background-color: $dark-background;
+
+		.carta-font-code {
+			color: $dark-text;
+			caret-color: $dark-text;
+		}
+
+		textarea {
+			color: $dark-text !important;
+			caret-color: $dark-text;
+
+			&::placeholder {
+				color: $dark-text-placeholder !important;
+			}
+		}
+
+		.carta-toolbar {
+			background-color: $dark-background-secondary;
+			color: $dark-text-muted;
+
+			.carta-icon {
+				color: $dark-text-muted;
+
+				&:hover {
+					color: $dark-text;
+					background-color: $dark-border;
+				}
+			}
+		}
+
+		.carta-toolbar-right,
+		.carta-filler {
+			border-bottom-color: $dark-border;
+		}
+
+		.carta-toolbar-left {
+			button {
+				color: $dark-text-muted;
+
+				&:hover {
+					color: $dark-text;
+				}
+			}
+
+			.carta-active {
+				background-color: $dark-background;
+				color: $dark-text;
+				border-right-color: $dark-border;
+				border-bottom-color: $dark-background;
+
+				&:not(:first-child) {
+					border-left-color: $dark-border;
+				}
+			}
+		}
+
+		.carta-icons-menu {
+			border-color: $dark-border;
+			background: $dark-background;
+
+			.carta-icon-full {
+				&:hover {
+					color: $dark-text;
+					background-color: $dark-border;
+				}
+
+				span {
+					color: $dark-text;
+				}
+			}
+		}
+
+		.carta-renderer {
+			color: $dark-text;
+		}
+	}
+
+	&.carta-emoji {
+		background-color: $dark-background;
+	}
+
+	&.carta-emoji button {
+		background: $dark-background-secondary;
+	}
+
+	&.carta-emoji button:hover,
+	&.carta-emoji button.carta-active {
+		background: $dark-border;
+	}
+
+	&.carta-slash {
+		background-color: $dark-background;
+	}
+
+	&.carta-slash button.carta-active,
+	&.carta-slash button:hover {
+		background: $dark-background-secondary;
+	}
+}
+
+// Shiki syntax highlighting
+html.dark .carta-theme__github .shiki,
+html.dark .carta-theme__github .shiki span {
+	color: var(--shiki-dark) !important;
+}
+
+// Carta tooltips - light mode
+.carta-theme__github[role="tooltip"],
+.carta-tooltip {
+	background-color: $light-background !important;
+	color: $light-text !important;
+	border: 1px solid $light-border !important;
+	border-radius: 6px;
+	padding: 4px 8px;
+	font-size: 0.75rem;
+}
+
+// Carta tooltips - dark mode
+html.dark .carta-theme__github[role="tooltip"],
+html.dark .carta-tooltip {
+	background-color: $dark-background-secondary !important;
+	color: $dark-text !important;
+	border-color: $dark-border !important;
+}

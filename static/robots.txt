@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /faq
+Allow: /new
+
+# Disallow paste pages - they contain encrypted user content
+Disallow: /p/
+
+Sitemap: https://enigmabin.com/sitemap.xml

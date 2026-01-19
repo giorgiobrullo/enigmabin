@@ -5,18 +5,18 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Paste {
   id         String    @id
   encrypted  Json?
-  burnToken  String
+  burnToken  String?
   expiresAt  DateTime?
   createdAt  DateTime  @default(now())
 
