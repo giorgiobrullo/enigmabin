@@ -27,6 +27,7 @@ export type AggregatePaste = {
 export type PasteMinAggregateOutputType = {
   id: string | null
   burnToken: string | null
+  burnKey: string | null
   expiresAt: Date | null
   createdAt: Date | null
 }
@@ -34,6 +35,7 @@ export type PasteMinAggregateOutputType = {
 export type PasteMaxAggregateOutputType = {
   id: string | null
   burnToken: string | null
+  burnKey: string | null
   expiresAt: Date | null
   createdAt: Date | null
 }
@@ -42,6 +44,7 @@ export type PasteCountAggregateOutputType = {
   id: number
   encrypted: number
   burnToken: number
+  burnKey: number
   expiresAt: number
   createdAt: number
   _all: number
@@ -51,6 +54,7 @@ export type PasteCountAggregateOutputType = {
 export type PasteMinAggregateInputType = {
   id?: true
   burnToken?: true
+  burnKey?: true
   expiresAt?: true
   createdAt?: true
 }
@@ -58,6 +62,7 @@ export type PasteMinAggregateInputType = {
 export type PasteMaxAggregateInputType = {
   id?: true
   burnToken?: true
+  burnKey?: true
   expiresAt?: true
   createdAt?: true
 }
@@ -66,6 +71,7 @@ export type PasteCountAggregateInputType = {
   id?: true
   encrypted?: true
   burnToken?: true
+  burnKey?: true
   expiresAt?: true
   createdAt?: true
   _all?: true
@@ -147,6 +153,7 @@ export type PasteGroupByOutputType = {
   id: string
   encrypted: runtime.JsonValue | null
   burnToken: string | null
+  burnKey: string | null
   expiresAt: Date | null
   createdAt: Date
   _count: PasteCountAggregateOutputType | null
@@ -176,6 +183,7 @@ export type PasteWhereInput = {
   id?: Prisma.StringFilter<"Paste"> | string
   encrypted?: Prisma.JsonNullableFilter<"Paste">
   burnToken?: Prisma.StringNullableFilter<"Paste"> | string | null
+  burnKey?: Prisma.StringNullableFilter<"Paste"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"Paste"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Paste"> | Date | string
 }
@@ -184,6 +192,7 @@ export type PasteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   encrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   burnToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  burnKey?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -195,6 +204,7 @@ export type PasteWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PasteWhereInput | Prisma.PasteWhereInput[]
   encrypted?: Prisma.JsonNullableFilter<"Paste">
   burnToken?: Prisma.StringNullableFilter<"Paste"> | string | null
+  burnKey?: Prisma.StringNullableFilter<"Paste"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"Paste"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Paste"> | Date | string
 }, "id">
@@ -203,6 +213,7 @@ export type PasteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   encrypted?: Prisma.SortOrderInput | Prisma.SortOrder
   burnToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  burnKey?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.PasteCountOrderByAggregateInput
@@ -217,6 +228,7 @@ export type PasteScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Paste"> | string
   encrypted?: Prisma.JsonNullableWithAggregatesFilter<"Paste">
   burnToken?: Prisma.StringNullableWithAggregatesFilter<"Paste"> | string | null
+  burnKey?: Prisma.StringNullableWithAggregatesFilter<"Paste"> | string | null
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Paste"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Paste"> | Date | string
 }
@@ -225,6 +237,7 @@ export type PasteCreateInput = {
   id: string
   encrypted?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   burnToken?: string | null
+  burnKey?: string | null
   expiresAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -233,6 +246,7 @@ export type PasteUncheckedCreateInput = {
   id: string
   encrypted?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   burnToken?: string | null
+  burnKey?: string | null
   expiresAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -241,6 +255,7 @@ export type PasteUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   encrypted?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   burnToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  burnKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -249,6 +264,7 @@ export type PasteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   encrypted?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   burnToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  burnKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -257,6 +273,7 @@ export type PasteCreateManyInput = {
   id: string
   encrypted?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   burnToken?: string | null
+  burnKey?: string | null
   expiresAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -265,6 +282,7 @@ export type PasteUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   encrypted?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   burnToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  burnKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -273,6 +291,7 @@ export type PasteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   encrypted?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   burnToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  burnKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -281,6 +300,7 @@ export type PasteCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   encrypted?: Prisma.SortOrder
   burnToken?: Prisma.SortOrder
+  burnKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -288,6 +308,7 @@ export type PasteCountOrderByAggregateInput = {
 export type PasteMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   burnToken?: Prisma.SortOrder
+  burnKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -295,6 +316,7 @@ export type PasteMaxOrderByAggregateInput = {
 export type PasteMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   burnToken?: Prisma.SortOrder
+  burnKey?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -321,6 +343,7 @@ export type PasteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id?: boolean
   encrypted?: boolean
   burnToken?: boolean
+  burnKey?: boolean
   expiresAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["paste"]>
@@ -329,6 +352,7 @@ export type PasteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   encrypted?: boolean
   burnToken?: boolean
+  burnKey?: boolean
   expiresAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["paste"]>
@@ -337,6 +361,7 @@ export type PasteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id?: boolean
   encrypted?: boolean
   burnToken?: boolean
+  burnKey?: boolean
   expiresAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["paste"]>
@@ -345,11 +370,12 @@ export type PasteSelectScalar = {
   id?: boolean
   encrypted?: boolean
   burnToken?: boolean
+  burnKey?: boolean
   expiresAt?: boolean
   createdAt?: boolean
 }
 
-export type PasteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "encrypted" | "burnToken" | "expiresAt" | "createdAt", ExtArgs["result"]["paste"]>
+export type PasteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "encrypted" | "burnToken" | "burnKey" | "expiresAt" | "createdAt", ExtArgs["result"]["paste"]>
 
 export type $PastePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Paste"
@@ -358,6 +384,7 @@ export type $PastePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id: string
     encrypted: runtime.JsonValue | null
     burnToken: string | null
+    burnKey: string | null
     expiresAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["paste"]>
@@ -786,6 +813,7 @@ export interface PasteFieldRefs {
   readonly id: Prisma.FieldRef<"Paste", 'String'>
   readonly encrypted: Prisma.FieldRef<"Paste", 'Json'>
   readonly burnToken: Prisma.FieldRef<"Paste", 'String'>
+  readonly burnKey: Prisma.FieldRef<"Paste", 'String'>
   readonly expiresAt: Prisma.FieldRef<"Paste", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Paste", 'DateTime'>
 }

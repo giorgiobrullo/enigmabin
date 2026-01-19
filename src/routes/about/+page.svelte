@@ -74,7 +74,7 @@
 					</Tooltip.Root>. Expiration timestamp.
 					<Tooltip.Root>
 						<Tooltip.Trigger class="text-foreground underline decoration-dotted underline-offset-4 cursor-help">Burn token hash</Tooltip.Trigger>
-						<Tooltip.Content class="max-w-xs">SHA-256 of a random token. You get the token, we store only the hash. Proves ownership for deletion without revealing the token.</Tooltip.Content>
+						<Tooltip.Content class="max-w-xs">SHA-256 of a random token. You get the token, we store only the hash. Database access can't recover it.</Tooltip.Content>
 					</Tooltip.Root>. That's it.
 					No IPs, no user agents, no cookies.
 				</p>

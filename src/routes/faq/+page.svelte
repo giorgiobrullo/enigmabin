@@ -47,11 +47,7 @@
 				<p class="text-muted-foreground">
 					Two separate URLs: a <span class="text-foreground">decryption URL</span> to view/share the paste,
 					and a <span class="text-foreground">deletion URL</span> to manually delete it. Keep them separate.
-					The decryption URL contains the key; the deletion URL contains a token we
-					<Tooltip.Root>
-						<Tooltip.Trigger class="text-foreground underline decoration-dotted underline-offset-4 cursor-help">hash</Tooltip.Trigger>
-						<Tooltip.Content class="max-w-xs">SHA-256. One-way function—we can verify your token matches without storing the original.</Tooltip.Content>
-					</Tooltip.Root> and store.
+					The decryption URL contains the key; the deletion URL contains a token we hash and store.
 				</p>
 			</div>
 
@@ -74,9 +70,9 @@
 			<div>
 				<h2 class="font-medium mb-2">How does burn-after-reading work?</h2>
 				<p class="text-muted-foreground">
-					The paste deletes itself after someone views it. The viewer's browser sends a delete request
-					after decryption. Not a security guarantee since they could save the content first, but useful
-					for one-time sharing.
+					The server verifies you possess the decryption key before releasing the ciphertext,
+					then deletes atomically. The recipient can still save content after viewing, but
+					the paste itself is gone.
 				</p>
 			</div>
 

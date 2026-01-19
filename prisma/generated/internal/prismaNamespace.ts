@@ -521,6 +521,7 @@ export const PasteScalarFieldEnum = {
   id: 'id',
   encrypted: 'encrypted',
   burnToken: 'burnToken',
+  burnKey: 'burnKey',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt'
 } as const

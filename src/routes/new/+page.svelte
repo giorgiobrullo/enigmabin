@@ -55,7 +55,7 @@
 			const initResponse = await fetch('/api/paste/init', { method: 'POST' });
 			const { pasteId, burnToken } = await initResponse.json();
 
-			const { encrypted, decryptionKey } = await encrypt(
+			const { encrypted, decryptionKey, burnKey } = await encrypt(
 				content,
 				burnOnView ? burnToken : undefined,
 				useQuantum
@@ -64,7 +64,7 @@
 			const response = await fetch('/api/paste', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id: pasteId, encrypted, expiration, burnToken })
+				body: JSON.stringify({ id: pasteId, encrypted, expiration, burnToken, burnKey })
 			});
 
 			const { url } = await response.json();
@@ -194,7 +194,7 @@
 						<div>
 							<Tooltip.Root>
 								<Tooltip.Trigger class="text-sm font-medium underline decoration-dotted underline-offset-4 cursor-help">Burn after reading</Tooltip.Trigger>
-								<Tooltip.Content class="max-w-xs">Deletes after successful decryption. Client-side enforced, so treat as convenience, not security guarantee.</Tooltip.Content>
+								<Tooltip.Content class="max-w-xs">Server verifies key possession before releasing ciphertext, then deletes atomically.</Tooltip.Content>
 							</Tooltip.Root>
 							<p class="text-xs text-muted-foreground">Delete after first view</p>
 						</div>

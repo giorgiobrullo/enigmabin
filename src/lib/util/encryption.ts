@@ -22,6 +22,7 @@ export async function encrypt(
 ): Promise<{
     encrypted: EncryptedData;
     decryptionKey: string;
+    burnKey?: string;  // Public key for verified burn-on-read
 }> {
     await _sodium.ready;
     const sodium = _sodium;
@@ -89,7 +90,9 @@ export async function encrypt(
                     ...(secretKey2 as Uint8Array),    // Classical secret key
                     ...(publicKey2 as Uint8Array)     // Classical public key (needed for unsealing)
                 ])
-            )
+            ),
+            // X25519 public key for verified burn-on-read (only included if burn token provided)
+            burnKey: burnToken ? sodium.to_base64(publicKey2 as Uint8Array) : undefined
         };
     } else {
         // Classical-only encryption mode using X25519
@@ -132,7 +135,9 @@ export async function encrypt(
                     ...(secretKey as Uint8Array),     // Secret key for unsealing
                     ...(publicKey as Uint8Array)      // Public key for unsealing
                 ])
-            )
+            ),
+            // X25519 public key for verified burn-on-read (only included if burn token provided)
+            burnKey: burnToken ? sodium.to_base64(publicKey as Uint8Array) : undefined
         };
     }
 }

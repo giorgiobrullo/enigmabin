@@ -6,6 +6,7 @@
 	import { Copy, Check } from '@lucide/svelte';
 	import type { EncryptedData, PasteContent } from '$lib/util/encryption';
 	import { toast } from 'svelte-sonner';
+	import _sodium from 'libsodium-wrappers';
 
 	let { data } = $props();
 
@@ -13,6 +14,7 @@
 	let error: string | null = $state(null);
 	let loading = $state(true);
 	let copied = $state(false);
+	let burned = $state(false);
 
 	async function copyContent() {
 		if (decryptedContent) {
@@ -22,21 +24,60 @@
 		}
 	}
 
-	async function decryptPaste(decryptionKey: string) {
+	/**
+	 * Extract the X25519 public key from the combined decryption key.
+	 * The public key is always the last 32 bytes.
+	 */
+	async function extractBurnKey(decryptionKeyBase64: string): Promise<string> {
+		await _sodium.ready;
+		const sodium = _sodium;
+		const combinedKey = sodium.from_base64(decryptionKeyBase64);
+		const publicKey = combinedKey.slice(-32);  // Last 32 bytes
+		return sodium.to_base64(publicKey);
+	}
+
+	/**
+	 * Verify key possession and get encrypted data for burn-on-read pastes.
+	 * Server atomically returns ciphertext and deletes the paste.
+	 */
+	async function verifyAndGetEncrypted(decryptionKey: string): Promise<EncryptedData | null> {
+		const burnKey = await extractBurnKey(decryptionKey);
+
+		const response = await fetch('/api/paste/verify', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ id: data.id, burnKey })
+		});
+
+		if (!response.ok) {
+			if (response.status === 404) {
+				throw new Error('Paste not found');
+			}
+			if (response.status === 403) {
+				throw new Error('Invalid key');
+			}
+			throw new Error('Verification failed');
+		}
+
+		const result = await response.json();
+		burned = result.burned;
+		return result.encrypted as EncryptedData;
+	}
+
+	async function decryptPaste(decryptionKey: string, encrypted: EncryptedData) {
 		if (!data.id) return;
 
 		try {
-			decryptedContent = await decrypt(
-				data.encrypted as unknown as EncryptedData,
-				decryptionKey
-			);
+			decryptedContent = await decrypt(encrypted, decryptionKey);
 			error = null;
 
-			if (decryptedContent && decryptedContent.burnToken) {
+			// Legacy burn-on-read (for pastes without burnKey stored)
+			if (decryptedContent && decryptedContent.burnToken && !burned) {
 				await fetch('/api/paste/delete', {
 					method: 'POST',
 					body: JSON.stringify({ id: data.id, burnToken: decryptedContent.burnToken })
 				});
+				burned = true;
 			}
 		} catch (e) {
 			error = 'Failed to decrypt. The URL might be incomplete or invalid.';
@@ -46,8 +87,9 @@
 		}
 	}
 
-	onMount(() => {
-		if (!data.encrypted) {
+	onMount(async () => {
+		// Check for paste not found
+		if (!data.id) {
 			error = 'Paste not found';
 			loading = false;
 			return;
@@ -59,7 +101,33 @@
 			loading = false;
 			return;
 		}
-		decryptPaste(key);
+
+		try {
+			let encrypted: EncryptedData;
+
+			if (data.needsVerification) {
+				// New verified burn-on-read flow
+				const result = await verifyAndGetEncrypted(key);
+				if (!result) {
+					error = 'Failed to retrieve paste';
+					loading = false;
+					return;
+				}
+				encrypted = result;
+			} else if (data.encrypted) {
+				// Standard flow (no burn or legacy burn)
+				encrypted = data.encrypted as unknown as EncryptedData;
+			} else {
+				error = 'Paste not found';
+				loading = false;
+				return;
+			}
+
+			await decryptPaste(key, encrypted);
+		} catch (e: any) {
+			error = e.message || 'Failed to decrypt. The URL might be incomplete or invalid.';
+			loading = false;
+		}
 	});
 </script>
 
@@ -105,7 +173,7 @@
 						{/if}
 					</div>
 
-					{#if decryptedContent.burnToken}
+					{#if burned || decryptedContent.burnToken}
 						<div class="px-3 py-1.5 rounded-md bg-destructive/10 text-destructive text-sm font-medium">
 							This paste has been deleted
 						</div>

@@ -17,6 +17,7 @@ model Paste {
   id         String    @id
   encrypted  Json?
   burnToken  String?
+  burnKey    String?   // Public key for verified burn-on-read (base64)
   expiresAt  DateTime?
   createdAt  DateTime  @default(now())
 

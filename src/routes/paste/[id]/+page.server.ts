@@ -25,6 +25,16 @@ export const load: PageServerLoad = async ({ params }) => {
             throw error(404, 'Paste not found');
         }
 
+        // If paste has burnKey, require verification before releasing ciphertext
+        if (paste.burnKey) {
+            return {
+                id: paste.id,
+                needsVerification: true,
+                createdAt: paste.createdAt,
+                expiresAt: paste.expiresAt
+            };
+        }
+
         return {
             id: paste.id,
             encrypted: paste.encrypted,

@@ -4,7 +4,7 @@ import { prisma } from '$lib/util/db';
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
-        const { encrypted, expiration, burnToken, id } = await request.json();
+        const { encrypted, expiration, burnToken, burnKey, id } = await request.json();
 
         if (!id) {
             throw new Error('Paste ID is required');
@@ -27,12 +27,13 @@ export const POST: RequestHandler = async ({ request }) => {
             throw new Error('Paste content exceeds 2MB limit');
         }
 
-        // Create paste in database
+        // Update paste with encrypted content
+        // Note: burnToken is already stored (hashed) from init, don't overwrite
         await prisma.paste.update ({
             where: { id },
             data: {
                 encrypted,
-                burnToken,
+                burnKey,  // Public key for verified burn-on-read
                 expiresAt
             }
         });
