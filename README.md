@@ -17,6 +17,8 @@
 
 <p align="center">
   <a href="https://enigmabin.com"><strong>enigmabin.com</strong></a>
+  &nbsp;·&nbsp;
+  <a href="http://enigmabinwlvg6hyekqa6ks3cw3b6jyynmpqrc5zc23g3rgngvu4w3id.onion"><strong>.onion</strong></a>
 </p>
 
 ## About
