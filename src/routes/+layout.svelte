@@ -78,6 +78,7 @@
 			<div class="flex gap-4">
 				<a href="mailto:contact@enigmabin.com" class="hover:text-foreground transition-colors">Contact</a>
 				<a href="https://github.com/giorgiobrullo/enigmabin" target="_blank" rel="noreferrer" class="hover:text-foreground transition-colors">GitHub</a>
+				<a href="http://enigmabinwlvg6hyekqa6ks3cw3b6jyynmpqrc5zc23g3rgngvu4w3id.onion" class="hover:text-foreground transition-colors" title="Tor Hidden Service">.onion</a>
 			</div>
 		</div>
 	</footer>

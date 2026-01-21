@@ -94,6 +94,17 @@
 			</div>
 
 			<div>
+				<h2 class="text-sm font-medium uppercase tracking-wider text-muted-foreground/70 mb-3">Tor</h2>
+				<p class="text-muted-foreground">
+					Available as a Tor hidden service for anonymous access.
+					<a
+						href="http://enigmabinwlvg6hyekqa6ks3cw3b6jyynmpqrc5zc23g3rgngvu4w3id.onion"
+						class="text-foreground underline underline-offset-4 hover:text-primary break-all"
+					>enigmabinwlvg6hyekqa6ks3cw3b6jyynmpqrc5zc23g3rgngvu4w3id.onion</a>
+				</p>
+			</div>
+
+			<div>
 				<h2 class="text-sm font-medium uppercase tracking-wider text-muted-foreground/70 mb-3">Who</h2>
 				<p class="text-muted-foreground">
 					Solo project by <a
