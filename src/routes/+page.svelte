@@ -105,6 +105,12 @@
 		}
 	}
 
+	let debounceTimer: ReturnType<typeof setTimeout>;
+	function debouncedEncrypt() {
+		clearTimeout(debounceTimer);
+		debounceTimer = setTimeout(() => runEncryption(quantumMode), 300);
+	}
+
 	onMount(() => {
 		runEncryption(false);
 	});
@@ -176,9 +182,13 @@
 			<!-- Input -->
 			<div>
 				<div class="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Input</div>
-				<div class="font-mono text-sm bg-card border rounded-lg p-4">
-					<span class="text-foreground">{plaintext}</span>
-				</div>
+				<textarea
+					bind:value={plaintext}
+					oninput={debouncedEncrypt}
+					placeholder="Type anything here..."
+					class="w-full font-mono text-sm bg-card border rounded-lg p-4 text-foreground resize-none min-h-[72px] md:min-h-[56px] focus:outline-none focus:ring-2 focus:ring-primary/50"
+					rows="2"
+				></textarea>
 			</div>
 
 			<!-- Arrow -->
@@ -235,7 +245,7 @@
 
 					<div>
 						<div class="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Decryption key</div>
-						<div class="font-mono text-xs bg-card border rounded-lg p-4">
+						<div class="font-mono text-xs bg-card border rounded-lg p-4 overflow-hidden">
 							<div class="text-primary break-all">{truncate(result.decryptionKey, 64)}</div>
 							<div class="mt-3 flex items-center justify-between">
 								<span class="text-muted-foreground/60">
@@ -284,7 +294,7 @@
 				<!-- URL preview -->
 				<div in:fade={{ duration: 150, delay: 100 }}>
 					<div class="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Share URL</div>
-					<div class="font-mono text-sm bg-card border rounded-lg p-4">
+					<div class="font-mono text-sm bg-card border rounded-lg p-4 overflow-hidden">
 						<span class="text-muted-foreground">enigmabin.com/p/</span><span class="text-foreground">demo</span><span class="text-muted-foreground">#</span><span class="text-primary">{truncate(result.decryptionKey, 20)}</span>
 					</div>
 				</div>
